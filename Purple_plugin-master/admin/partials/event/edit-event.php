@@ -635,7 +635,7 @@ $type = get_post_meta($plan_id,'type');
           }else{
             $total_ = 0;
           }
-          $publish = get_post_meta($_GET['id'],'publish_date_'.$total_workflow,true);
+          $publish = @get_post_meta($_GET['id'],'publish_date_'.$total_workflow,true);
           if($publish !='' && $total_ == 100){
             echo '<span class="ndl-Badge ndl-Badge--success  workflow-state-wrapper">Completed</span>';
           }elseif(strtotime($publish) >= strtotime('now') ){
@@ -681,13 +681,13 @@ $type = get_post_meta($plan_id,'type');
 
         // $total_created_workflows = get_post_meta($work_data->ID,'created_workflows')[0];
 
-        $created_workflow_count = get_post_meta($work_data->ID,'created_workflows')[0];
+        $created_workflow_count = @get_post_meta($work_data->ID,'created_workflows')[0];
         $created_workflow_count = ($created_workflow_count == 0) ? 0: $created_workflow_count;
         // titles
-        $workflow_titles = get_post_meta($work_data->ID,'workflow_titles')[0];
+        $workflow_titles = @get_post_meta($work_data->ID,'workflow_titles')[0];
         $workflow_titles = unserialize($workflow_titles);
         // Descritpions
-        $workflow_descriptions = get_post_meta($work_data->ID,'workflow_descriptions')[0];
+        $workflow_descriptions = @get_post_meta($work_data->ID,'workflow_descriptions')[0];
         $workflow_descriptions = unserialize($workflow_descriptions);
 
         // for($workflow_counter = 0; $workflow_counter <= $total_created_workflows; $workflow_counter++){

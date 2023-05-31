@@ -1222,17 +1222,18 @@ function save_feature_images()
 
     update_post_meta(@$post->ID, 'upload_image', serialize($image_gallery));
 }
+
 function workflow_callback()
 {
     global $post;
 
-    $created_workflow_count = get_post_meta($post->ID, 'created_workflows')[0];
+    $created_workflow_count = @get_post_meta($post->ID, 'created_workflows')[0];
     $created_workflow_count = ($created_workflow_count == 0) ? 0 : $created_workflow_count;
     // titles
-    $workflow_titles = get_post_meta($post->ID, 'workflow_titles')[0];
+    $workflow_titles = @get_post_meta($post->ID, 'workflow_titles')[0];
     $workflow_titles = unserialize($workflow_titles);
     // Descritpions
-    $workflow_descriptions = get_post_meta($post->ID, 'workflow_descriptions')[0];
+    $workflow_descriptions = @get_post_meta($post->ID, 'workflow_descriptions')[0];
     $workflow_descriptions = unserialize($workflow_descriptions);
     // List workflows
 
@@ -1340,10 +1341,39 @@ function workflow_callback()
     <?php
 }
 add_action('save_post_workflow', 'save_workflows', 10);
+
 function save_workflows()
 {
+    // if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
+    //     return;
+    // global $post;
+
+    // if (!empty($_POST['workflow_title'])) {
+    //     $titles = $_POST['workflow_title'];
+    //     update_post_meta($post->ID, 'workflow_titles', serialize($titles));
+    //     // 
+    //     $checklists = [];
+    //     foreach ($titles as $key => $title) {
+    //         $name = "checklists$key";
+    //         $checklists[$name] = $_POST[$name];
+    //     }
+    //     if (!empty($checklists)) {
+    //         foreach ($checklists as $key => $value) {
+    //             update_post_meta($post->ID, $key, serialize($value));
+    //         }
+    //     }
+    // }
+
+    // if (!empty($_POST['workflow_description'])) {
+    //     $descriptions = $_POST['workflow_description'];
+    //     update_post_meta($post->ID, 'workflow_descriptions', serialize($descriptions));
+    // }
+
+    // update_post_meta($post->ID, 'created_workflows', count($_POST['workflow_title']));
+
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
-        return;
+    return;
+
     global $post;
 
     if (!empty($_POST['workflow_title'])) {
@@ -1367,7 +1397,9 @@ function save_workflows()
         update_post_meta($post->ID, 'workflow_descriptions', serialize($descriptions));
     }
 
-    update_post_meta($post->ID, 'created_workflows', count($_POST['workflow_title']));
+    $workflow_title_count = isset($_POST['workflow_title']) && is_array($_POST['workflow_title']) ? count($_POST['workflow_title']) : 0;
+    update_post_meta($post->ID, 'created_workflows', $workflow_title_count);
+
 }
 
 function article_attachment_callback()
